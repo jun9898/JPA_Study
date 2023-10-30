@@ -18,6 +18,18 @@ public class JpaMain {
         tx.begin();
 
         try{
+
+            // 비영속 상태
+            Member member = new Member();
+            member.setId(100L);
+            member.setName("HelloJPA");
+
+            // em 안의 영속성 컨텍스트에 속하게 되어 영속 상태가 된다
+            System.out.println("====BEFORE=====");
+            em.persist(member);
+            // 회원 엔티티를 영속성 컨텍스트에서 분리, 준영속 상태
+            em.detach(member);
+            System.out.println("====AFTER=====");
 /*
             insert
             Member member = new Member();
@@ -41,9 +53,11 @@ public class JpaMain {
                     .setMaxResults(8)
                     .getResultList();
 
+/*
             for (Member member : result) {
                 System.out.println("member.getName() = " + member.getName());
             }
+*/
 
 /*
             업데이트 같은 경우 한번 가져온 엔티티를 계속해서 관리한다.

@@ -1,11 +1,9 @@
-package hellojpa;
+package hellojpa.section3;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-
-import java.util.List;
 
 public class JpaMain2 {
     public static void main(String[] args) {
@@ -57,9 +55,17 @@ public class JpaMain2 {
             System.out.println("==========================================");
 */
             // update같은 경우 영속성 컨텍스트에 들어있는 객체를 수정해주고 커밋만 해줘도 update가 된다.
-            Member member = em.find(Member.class, 150L);
+            // 영속 컨텍스트는 엔티티가 영속화 될때 최초 스냅샷을 남겨둔다.
+            // 이후 커밋이 진행되어 flush 가 발동되면 해당 스냅샷과 현재 엔티티의 상태를 비교하는 Dirty Checking을 진행한다.
+            // 만약 엔티티에 변경사항이 있다면 쓰기지연 sql 저장소에 update 쿼리를 저장하고 한번에 커밋한다.
+            Member1 member1 = em.find(Member1.class, 150L);
             // 놀라운 기능
-            member.setName("zzz");
+            member1.setName("zzz");
+
+            if (member1.getName().equals("zzzz")){
+                em.persist(member1);
+            }
+
 
             tx.commit();
         } catch (Exception e) {

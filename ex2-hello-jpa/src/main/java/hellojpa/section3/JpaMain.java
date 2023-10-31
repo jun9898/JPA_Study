@@ -1,4 +1,4 @@
-package hellojpa;
+package hellojpa.section3;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -20,15 +20,15 @@ public class JpaMain {
         try{
 
             // 비영속 상태
-            Member member = new Member();
-            member.setId(100L);
-            member.setName("HelloJPA");
+            Member1 member1 = new Member1();
+            member1.setId(100L);
+            member1.setName("HelloJPA");
 
             // em 안의 영속성 컨텍스트에 속하게 되어 영속 상태가 된다
             System.out.println("====BEFORE=====");
-            em.persist(member);
+            em.persist(member1);
             // 회원 엔티티를 영속성 컨텍스트에서 분리, 준영속 상태
-            em.detach(member);
+            em.detach(member1);
             System.out.println("====AFTER=====");
 /*
             insert
@@ -41,14 +41,14 @@ public class JpaMain {
 /*
             select
 */
-            Member findMember = em.find(Member.class, 1L);
-            System.out.println("findMember.getId() = " + findMember.getId());
-            System.out.println("findMember.getName() = " + findMember.getName());
+            Member1 findMember1 = em.find(Member1.class, 1L);
+            System.out.println("findMember.getId() = " + findMember1.getId());
+            System.out.println("findMember.getName() = " + findMember1.getName());
 
 /*
             테이블을 기준으로한것이 아닌 Member 객체를 대상으로 쿼리를 돌린다.
 */
-            List<Member> result = em.createQuery("select m from Member m", Member.class)
+            List<Member1> result = em.createQuery("select m from Member1 m", Member1.class)
                     .setFirstResult(5)
                     .setMaxResults(8)
                     .getResultList();
@@ -63,7 +63,7 @@ public class JpaMain {
             업데이트 같은 경우 한번 가져온 엔티티를 계속해서 관리한다.
             만약 해당 Entity가 변경되었다면 EntityManager가 자동으로 update 쿼리를 날려준다
 */
-            findMember.setName("Hello JPA");
+            findMember1.setName("Hello JPA");
 
 /*
             delete는 해당 객체를 고대로 넘기면 삭제된다

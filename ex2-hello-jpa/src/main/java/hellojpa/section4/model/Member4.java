@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Table(name = "member")
-public class Member {
+public class Member4 {
 
     @Id
     @GeneratedValue

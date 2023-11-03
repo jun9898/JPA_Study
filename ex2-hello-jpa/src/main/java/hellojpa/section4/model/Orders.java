@@ -17,7 +17,7 @@ public class Orders {
     @ManyToOne
     @ToString.Exclude
     @JoinColumn(name = "member_id")
-    private Member member;
+    private Member4 member4;
     @CreationTimestamp
     private Date orderdate;
     private String status;

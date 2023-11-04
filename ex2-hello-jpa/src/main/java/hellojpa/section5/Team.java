@@ -24,5 +24,6 @@ public class Team {
     @OneToMany(mappedBy = "team")
     List<Member5> members = new ArrayList<>();
 
+    // 인텔리제이 MAC 세팅중
 
 }

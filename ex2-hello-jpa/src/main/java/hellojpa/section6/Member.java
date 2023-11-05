@@ -1,4 +1,4 @@
-package hellojpa.section5;
+package hellojpa.section6;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,12 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member5 {
+public class Member {
 
     @Id @GeneratedValue
     @Column(name = "member_id")
@@ -20,17 +23,11 @@ public class Member5 {
     @Column(name = "username")
     private String username;
 
-    @ManyToOne
-    @JoinColumn(name = "team_id")
-    private Team team;
+    @OneToOne
+    @JoinColumn(name = "locker_id")
+    private Locker locker;
 
-    public Member5(String username, Team team) {
-        this.username = username;
-        this.team = team;
-    }
+    @OneToMany(mappedBy = "member")
+    private List<MemberProduct> memberProducts = new ArrayList<>();
 
-    public void changeTeam(Team team) {
-        this.team = team;
-        team.getMembers().add(this);
-    }
 }

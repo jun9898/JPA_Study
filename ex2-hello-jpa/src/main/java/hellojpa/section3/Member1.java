@@ -1,9 +1,6 @@
 package hellojpa.section3;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +11,7 @@ import lombok.Setter;
 public class Member1 {
 
     @Id
+    @GeneratedValue
     private Long id;
     // unique값과 length를 Column 어노테이션에서 설정해줄 수 있다
     @Column(unique = true, length = 10)

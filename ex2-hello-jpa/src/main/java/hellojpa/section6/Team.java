@@ -1,4 +1,4 @@
-package hellojpa.section5;
+package hellojpa.section6;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,9 +21,9 @@ public class Team {
 
     @ToString.Exclude
     // mappedBy의 존재 의의
-    @OneToMany(mappedBy = "team")
-    List<Member5> members = new ArrayList<>();
-
-    // 인텔리제이 MAC 세팅중
+    // 데이터의 수정은 불가능하고 열람만 가능
+    @OneToMany
+    @JoinColumn(name = "team_id")
+    List<Member> members = new ArrayList<>();
 
 }

@@ -1,5 +1,7 @@
 package hellojpa.section5;
 
+import hellojpa.section6.Member;
+import hellojpa.section6.Team;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -22,10 +24,10 @@ public class JpaRelationTest2 {
 //            team.getMembers().add(member);
             em.persist(team);
 
-            Member5 member = new Member5();
+            Member member = new Member();
             member.setUsername("member1");
 //            연관관계의 주인에만 값을 넣어줘도 다른 연관관계의 값이 자동으로 매핑된다.
-            member.setTeam(team);
+//            member.setTeam(team);
             em.persist(member);
 
             team.getMembers().add(member);
@@ -34,8 +36,8 @@ public class JpaRelationTest2 {
             em.clear();
 
             Team findTeam = em.find(Team.class, team.getId());
-            List<Member5> members = findTeam.getMembers();
-            for (Member5 member5 : members) {
+            List<Member> members = findTeam.getMembers();
+            for (Member member5 : members) {
                 System.out.println("==============================================");
                 System.out.println("member5.toString() ========================= " + member5.toString());
             }

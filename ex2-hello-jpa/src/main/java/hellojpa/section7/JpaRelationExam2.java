@@ -1,11 +1,11 @@
-package hellojpa.section6;
+package hellojpa.section7;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
-public class JpaRelationExam {
+public class JpaRelationExam2 {
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
         EntityManager em = emf.createEntityManager();
@@ -14,17 +14,18 @@ public class JpaRelationExam {
 
         try{
 
-            // 이럴거면 그냥 다대일 양방향 쓰지
-            Member member = new Member();
-            member.setUsername("testUser");
+            Movie movie = new Movie();
+            movie.setName("A");
+            movie.setActor("aaaa");
+            movie.setDirector("BBBB");
+            movie.setPrice(1000);
+            em.persist(movie);
 
-            em.persist(member);
+            em.flush();
+            em.clear();
 
-            Team team = new Team();
-            team.setName("teamA");
-            team.getMembers().add(member);
+            Movie findMovie = em.find(Movie.class, movie.getId());
 
-            em.persist(team);
 
             tx.commit();
         } catch (Exception e) {

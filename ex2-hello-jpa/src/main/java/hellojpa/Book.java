@@ -1,4 +1,4 @@
-package hellojpa.section7;
+package hellojpa;
 
 import jakarta.persistence.Entity;
 

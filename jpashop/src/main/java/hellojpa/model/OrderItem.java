@@ -10,14 +10,12 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
-    private Orders orders;
+    private Order order;
 
     // item 추가
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;
-
-
     private Long orderPrice;
     private Long count;
 }

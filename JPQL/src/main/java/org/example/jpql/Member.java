@@ -3,10 +3,12 @@ package org.example.jpql;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
+@ToString
 public class Member {
 
     @Id @GeneratedValue
@@ -19,6 +21,7 @@ public class Member {
 
     @ManyToOne
     @JoinColumn(name = "team_id")
+    @ToString.Exclude
     private Team team;
 
     public void changeTeam(Team team) {

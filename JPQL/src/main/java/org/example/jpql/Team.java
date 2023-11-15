@@ -1,11 +1,9 @@
 package org.example.jpql;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +11,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString
 public class Team {
 
     @Id
@@ -20,7 +19,7 @@ public class Team {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
     private List<Member> members = new ArrayList<>();
 
 }

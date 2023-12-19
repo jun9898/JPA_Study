@@ -31,7 +31,24 @@ class MemberRepositoryTest {
 
         //then
         assertEquals(member, memberRepository.findOne(saveId));
+    }
 
+    @Test()
+    void 중복_회원_예외() throws Exception {
+        //given
+        Member member1 = new Member();
+        member1.setName("kim");
+
+        Member member2 = new Member();
+        member2.setName("kim");
+
+        //when
+        memberService.join(member1);
+
+        //then
+        assertThrows(IllegalAccessException.class, () -> {
+            memberService.join(member2);
+        });
     }
 
 

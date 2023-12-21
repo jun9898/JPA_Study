@@ -1,7 +1,9 @@
 package jpabook.jpashop.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -11,6 +13,8 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @Table(name = "orders")
+// 이렇게 선언해주면 함부로 기본 생성자로 객체를 생성할 수 없다
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
 
     @Id @GeneratedValue

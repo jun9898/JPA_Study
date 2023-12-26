@@ -94,11 +94,18 @@ public class OrderRepository {
         return query.getResultList();
     }
 
+    public List<Order> findAllWithMemberDelivery() {
+        // EAGER 대신 Fetch join을 사용하자
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery", Order.class
+        ).getResultList();
+    }
+
+
     // 답은 QueryDSL
     // 동적 쿼리를 작성할 떄 많은 이점을 가져갈 수 있다.
-
-
-
 
 
 }

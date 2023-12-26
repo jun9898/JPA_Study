@@ -23,8 +23,9 @@ public class Member {
 	private String name;
 	@Embedded
 	private Address address;
+
 	// 화면을 표시하기 위한 스펙은 엔티티에서 설정할 게 아니라 DTO로 따로 빼서 사용해야 한다
-	// @JsonIgnore
+	@JsonIgnore
 	@OneToMany(mappedBy = "member")
 	private List<Order> orderList = new ArrayList<>();
 }

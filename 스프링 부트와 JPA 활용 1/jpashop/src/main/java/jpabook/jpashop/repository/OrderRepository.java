@@ -103,6 +103,19 @@ public class OrderRepository {
         ).getResultList();
     }
 
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+                // 하이버네이트 6버전부터는 페치조인 사용시 distinct를 사용하지 않아도 자동으로 중복 제거를 하도록 변경되었다.
+                // 페치조인을 사용하면 페이징이 불가능하다.
+                // 컬렉션 페치조인은 1개만 사용할 수 있다. 컬렉션 둘 이상에 페치 조인을 사용하면 데이터가 부정합하게 조회될 수 있다.
+                "select distinct o from Order o " +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderItems oi" +
+                        " join fetch oi.item i", Order.class)
+                .getResultList();
+    }
+
 
     // 답은 QueryDSL
     // 동적 쿼리를 작성할 떄 많은 이점을 가져갈 수 있다.

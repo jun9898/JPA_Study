@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class Order {
     private Member member;
 
     // 추가 작업 없이 Order만 persist해주면 추가된 객체가 같이 저장됨(삭제도 마찬가지)
+//    BatchSize를 사용하는것보단 defult_batch_fetch_size로 최적화하는걸 권장
+//    @BatchSize(size = 1000)
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 

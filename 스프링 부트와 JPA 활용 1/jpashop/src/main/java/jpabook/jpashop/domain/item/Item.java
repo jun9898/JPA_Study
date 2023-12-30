@@ -7,11 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
 import java.util.List;
 
+//@BatchSize(size = 100)
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
@@ -27,6 +29,7 @@ public abstract class Item {
     private int price;
     private int stockQuantity;
 
+    // ManyToOne이 아닌 ManyToMany의 관계여서 컬럼 위쪽이 아닌 엔티티 최상단에 BatchSize를 작성해줘야 한다.
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
 

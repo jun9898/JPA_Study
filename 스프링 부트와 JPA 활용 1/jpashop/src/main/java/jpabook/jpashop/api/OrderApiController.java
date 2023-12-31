@@ -1,22 +1,21 @@
 package jpabook.jpashop.api;
 
-import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderItem;
-import jpabook.jpashop.domain.OrderStatus;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
 import jpabook.jpashop.repository.order.query.OrderFlatDto;
 import jpabook.jpashop.repository.order.query.OrderItemQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryDto;
 import jpabook.jpashop.repository.order.query.OrderQueryRepository;
+import jpabook.jpashop.service.query.OrderDto;
+import jpabook.jpashop.service.query.OrderQueryService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.util.stream.Collectors.*;
@@ -32,6 +31,13 @@ public class OrderApiController {
     public List<Order> ordersV1() {
         List<Order> all = orderRepository.findAllByString(new OrderSearch());
         // 프록시 강제 초기화
+        // OSIV open session in view로 인해 트렌젝션이 끝나도 영속화가 해지되지 않는다.
+        // 화면까지 무사히 요청이 빠져나가 렌터링이 완료되면 영속화를 해지
+        // Controller에서 지연로딩이 가능했던 이유는 다음과 같다.
+        // 개발단계에서 유지보수성을 높힐 수 있다는 장점이 있다.
+        // 하지만 이 전략의 단점은 커넥션을 너무 오랫동안 물고있어 트래픽이 많은 어플리케이션같은 경우에는 서버의 부담이 심해진다.
+        // LazyInitializationException 이 발생하는 문제가 발생할 수 있다.
+        // 설정방법을 yml 파일에
         for (Order order : all) {
             order.getMember().getName();
             order.getDelivery().getAddress();
@@ -50,12 +56,13 @@ public class OrderApiController {
         return result;
     }
 
+    private final OrderQueryService orderQueryService;
+
     @GetMapping("/api/v3/orders")
     public List<OrderDto> ordersV3() {
-        List<Order> orders = orderRepository.findAllWithItem();
-        return orders.stream()
-                .map(OrderDto::new)
-                .collect(toList());
+        // OSIV open session in view 설정을 끄고 Transactional 안에서 Lazy Loading 을 처리하는 코드
+        List<OrderDto> result = orderQueryService.orderV3();
+        return result;
     }
 
     @GetMapping("/api/v3.1/orders")
@@ -96,43 +103,4 @@ public class OrderApiController {
     }
 
 
-
-    @Getter
-    static class OrderDto {
-
-        private Long orderId;
-        private String name;
-        private LocalDateTime orderDate;
-        private OrderStatus orderStatus;
-        private Address address;
-        private List<OrderItemDto> orderItems;
-
-        public OrderDto(Order order) {
-            orderId = order.getId();
-            name = order.getMember().getName();
-            orderDate = order.getOrderDate();
-            orderStatus = order.getStatus();
-            address = order.getMember().getAddress();
-            order.getOrderItems().forEach(o -> o.getItem().getName());
-            orderItems = order.getOrderItems().stream()
-                    .map(OrderItemDto::new)
-                    .collect(toList());
-        }
-    }
-
-    @Getter
-    static class OrderItemDto {
-
-        private String itemName; // 상품명
-        private int orderPrice; // 주문 가격
-        private int count; // 주문수량
-
-
-        public OrderItemDto(OrderItem orderItem) {
-            itemName = orderItem.getItem().getName();
-            orderPrice = orderItem.getOrderPrice();
-            count = orderItem.getCount();
-
-        }
-    }
 }

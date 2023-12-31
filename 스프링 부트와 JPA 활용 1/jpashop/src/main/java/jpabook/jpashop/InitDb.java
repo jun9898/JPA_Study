@@ -27,7 +27,6 @@ public class InitDb {
     public void init() {
         initService.dbInit1();
         initService.dbInit2();
-
     }
 
     @Component
@@ -95,9 +94,6 @@ public class InitDb {
             member.setAddress(new Address(city, street, zipcode));
             return member;
         }
-
     }
-
-
 }
 

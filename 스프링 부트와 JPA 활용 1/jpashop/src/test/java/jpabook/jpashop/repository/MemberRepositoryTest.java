@@ -17,7 +17,7 @@ class MemberRepositoryTest {
     MemberService memberService;
 
     @Autowired
-    MemberRepository memberRepository;
+    MemberRepositoryOld memberRepository;
 
     @Test
     void 회원가입() throws Exception {

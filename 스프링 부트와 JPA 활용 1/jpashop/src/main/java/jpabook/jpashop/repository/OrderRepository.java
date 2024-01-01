@@ -1,10 +1,17 @@
 package jpabook.jpashop.repository;
 
+import static jpabook.jpashop.domain.QMember.*;
+import static jpabook.jpashop.domain.QOrder.*;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderStatus;
+import jpabook.jpashop.domain.QMember;
+import jpabook.jpashop.domain.QOrder;
+import jpabook.jpashop.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -12,11 +19,19 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
 @Repository
-@RequiredArgsConstructor
 public class OrderRepository {
 
     private final EntityManager em;
+    private final JPAQueryFactory query;
+
+    public OrderRepository(EntityManager em) {
+        this.em = em;
+        this.query = new JPAQueryFactory(em);
+    }
 
     public void save(Order order) {
         em.persist(order);
@@ -94,6 +109,8 @@ public class OrderRepository {
         return query.getResultList();
     }
 
+
+
     public List<Order> findAllWithMemberDelivery(int offset, int limit) {
         // EAGER 대신 Fetch join을 사용하자
         // ToOne 관계는 페이징에 영향을 주지 않기 때문에 fetch join으로 최적화 하자
@@ -133,6 +150,31 @@ public class OrderRepository {
 
     // 답은 QueryDSL
     // 동적 쿼리를 작성할 떄 많은 이점을 가져갈 수 있다.
+    public List<Order> findAll(OrderSearch orderSearch) {
 
+        return query
+            .select(order)
+            .from(order)
+            .join(order.member, member)
+            // 동적쿼리 해결 ㄷㄷ
+            .where(statusEq(orderSearch.getOrderStatus()), nameLike(orderSearch.getMemberName()))
+            .limit(1000)
+            .fetch();
+
+    }
+
+    private BooleanExpression nameLike(String memberName) {
+        if (!StringUtils.hasText(memberName)) {
+            return null;
+        }
+        return member.name.like(memberName);
+    }
+
+    private BooleanExpression statusEq(OrderStatus statusCond) {
+        if (statusCond == null) {
+            return null;
+        }
+        return order.status.eq(statusCond);
+    }
 
 }

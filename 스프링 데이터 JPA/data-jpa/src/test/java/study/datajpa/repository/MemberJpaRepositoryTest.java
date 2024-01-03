@@ -1,16 +1,12 @@
 package study.datajpa.repository;
 
 import jakarta.transaction.Transactional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import study.datajpa.entity.Member;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest
@@ -20,7 +16,7 @@ class MemberJpaRepositoryTest {
 
     @Test
     public void testMember() {
-        Member member = new Member("memberA");
+        Member member = new Member("memberA", 10);
         Member saveMember = memberJpaRepository.save(member);
 
         Member findMember = memberJpaRepository.findById(saveMember.getId()).get();
